@@ -7,7 +7,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -18,10 +18,15 @@ jobs:
         
       - name: Build
         run: dotnet build --configuration Release --no-restore
-
+        
       - name: Publish
         run: dotnet publish --configuration Release --output ./publish
-
+        
+      - name: Run EF Core Migrations
+        run: |
+          dotnet tool install --global dotnet-ef
+          dotnet ef database update --connection "${{ secrets.DB_CONNECTION_STRING }}"
+        
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
