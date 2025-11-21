@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Enrichify.Controllers
 {
-    //cant login to ftp deploy
+    //last try, web deploy
     [Authorize]
     public class HomeController : Controller
     {
