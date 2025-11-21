@@ -24,7 +24,8 @@ jobs:
         
       - name: Run EF Core Migrations
         run: |
-          dotnet tool install --global dotnet-ef
+          dotnet new tool-manifest --force
+          dotnet tool install dotnet-ef
           dotnet ef database update --connection "${{ secrets.DB_CONNECTION_STRING }}"
         
       - name: Deploy via FTP
