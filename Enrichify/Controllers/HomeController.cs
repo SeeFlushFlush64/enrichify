@@ -7,6 +7,7 @@ using System.Globalization;
 
 namespace Enrichify.Controllers
 {
+    //for test commit
     [Authorize]
     public class HomeController : Controller
     {
