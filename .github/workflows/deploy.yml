@@ -4,7 +4,7 @@ on:
     branches: [ main ]
 jobs:
   build_and_deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       
@@ -12,6 +12,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0
+          
+      - name: Install EF Core Tools
+        run: dotnet tool install --global dotnet-ef
           
       - name: Restore dependencies
         run: dotnet restore
@@ -23,10 +26,7 @@ jobs:
         run: dotnet publish --configuration Release --output ./publish
         
       - name: Run EF Core Migrations
-        run: |
-          dotnet new tool-manifest --force
-          dotnet tool install dotnet-ef
-          dotnet ef database update --connection "${{ secrets.DB_CONNECTION_STRING }}"
+        run: dotnet ef database update --connection "${{ secrets.DB_CONNECTION_STRING }}"
         
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
