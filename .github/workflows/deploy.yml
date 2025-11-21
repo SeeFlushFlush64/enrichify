@@ -13,9 +13,6 @@ jobs:
         with:
           dotnet-version: 8.0
           
-      - name: Install EF Core Tools
-        run: dotnet tool install --global dotnet-ef
-          
       - name: Restore dependencies
         run: dotnet restore
         
@@ -24,9 +21,6 @@ jobs:
         
       - name: Publish
         run: dotnet publish ./Enrichify/Enrichify.csproj --configuration Release --output ./publish
-        
-      - name: Run EF Core Migrations
-        run: dotnet ef database update --project ./Enrichify/Enrichify.csproj --connection "${{ secrets.DB_CONNECTION_STRING }}"
         
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
