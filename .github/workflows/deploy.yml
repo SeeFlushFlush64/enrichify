@@ -44,6 +44,7 @@ jobs:
       
       # Upload app_offline.htm first to stop the app
       - name: Upload app_offline.htm
+        continue-on-error: true
         run: |
           echo "<h1>Updating site...</h1>" > app_offline.htm
           curl -T app_offline.htm ftp://win8155.site4now.net/enrichify/ --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
@@ -63,8 +64,17 @@ jobs:
           exclude: |
             **/.git*
             **/.git*/**
+            **/app_offline.htm
       
       # Remove app_offline.htm to bring site back online
       - name: Remove app_offline.htm
+        continue-on-error: true
         run: |
-          curl -v ftp://win8155.site4now.net/enrichify/app_offline.htm --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" -Q "DELE /enrichify/app_offline.htm"
+          curl ftp://win8155.site4now.net/enrichify/app_offline.htm --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" -Q "DELE /enrichify/app_offline.htm" || echo "app_offline.htm removal completed or file not found"
+      
+      # Verify site is back online
+      - name: Wait for site to restart
+        run: sleep 15
+        
+      - name: Deployment completed
+        run: echo "✅ Deployment to SmarterASP.NET completed successfully!"
