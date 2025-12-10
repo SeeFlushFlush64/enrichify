@@ -1,0 +1,57 @@
+name: Build project and deploy to SmarterASP.NET
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0
+          
+      - name: Restore dependencies
+        run: dotnet restore
+        
+      # 🔒 CREATE appsettings.json with secrets from GitHub
+      - name: Create appsettings.json
+        run: |
+          cat > ./Enrichify/appsettings.json << EOF
+          {
+            "Logging": {
+              "LogLevel": {
+                "Default": "Information",
+                "Microsoft.AspNetCore": "Warning"
+              }
+            },
+            "AllowedHosts": "*",
+            "Hunter": {
+              "ApiKey": "${{ secrets.HUNTER_API_KEY }}"
+            }
+          }
+          EOF
+        
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+        
+      - name: Publish
+        run: dotnet publish ./Enrichify/Enrichify.csproj --configuration Release --output ./publish
+        
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: win8155.site4now.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./publish/
+          server-dir: /enrichify/
+          # Don't upload unnecessary files
+          exclude: |
+            **/.git*
+            **/.git*/**

@@ -1,0 +1,104 @@
+﻿@model List<Enrichify.Models.Contact>
+@{
+    ViewData["Title"] = "Enrichment Results";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">Enrichment Results</h2>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Back to Upload
+                </a>
+            </div>
+
+            @{
+                var enrichedCount = Model.Count(c => !string.IsNullOrEmpty(c.EnrichedEmail));
+                var totalCount = Model.Count;
+            }
+
+            <div class="alert alert-info mb-4">
+                <strong>Success!</strong> Found <strong>@enrichedCount</strong> out of <strong>@totalCount</strong> emails
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="px-4 py-3">Name</th>
+                                    <th class="px-4 py-3">Company</th>
+                                    <th class="px-4 py-3">Original Email</th>
+                                    <th class="px-4 py-3">Enriched Email</th>
+                                    <th class="px-4 py-3 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var contact in Model)
+                                {
+                                    <tr>
+                                        <td class="px-4 py-3">
+                                            <strong>@contact.Name</strong>
+                                        </td>
+                                        <td class="px-4 py-3">@contact.Company</td>
+                                        <td class="px-4 py-3">
+                                            <span class="text-muted">@(string.IsNullOrEmpty(contact.Email) ? "—" : contact.Email)</span>
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            @if (!string.IsNullOrEmpty(contact.EnrichedEmail))
+                                            {
+                                                <strong class="text-success">@contact.EnrichedEmail</strong>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Not found</span>
+                                            }
+                                        </td>
+                                        <td class="px-4 py-3 text-center">
+                                            @if (!string.IsNullOrEmpty(contact.EnrichedEmail))
+                                            {
+                                                <span class="badge bg-success">✓ Found</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">✗ Not Found</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <button class="btn btn-success btn-lg" onclick="exportToCSV()">
+                    <i class="bi bi-download me-2"></i>Download Results
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function exportToCSV() {
+        // Simple CSV export function
+        let csv = 'Name,Company,Original Email,Enriched Email\n';
+        @foreach (var contact in Model)
+        {
+                <text>
+                csv += '@contact.Name,@contact.Company,@contact.Email,@(contact.EnrichedEmail ?? "")\n';
+                </text>
+        }
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'enriched_contacts.csv';
+        a.click();
+    }
+</script>
