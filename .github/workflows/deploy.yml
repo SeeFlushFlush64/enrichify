@@ -19,7 +19,6 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
         
-      # 🔒 CREATE appsettings.json with secrets from GitHub
       - name: Create appsettings.json
         run: |
           cat > ./Enrichify/appsettings.json << EOF
@@ -42,6 +41,16 @@ jobs:
         
       - name: Publish
         run: dotnet publish ./Enrichify/Enrichify.csproj --configuration Release --output ./publish
+      
+      # Upload app_offline.htm first to stop the app
+      - name: Upload app_offline.htm
+        run: |
+          echo "<h1>Updating site...</h1>" > app_offline.htm
+          curl -T app_offline.htm ftp://win8155.site4now.net/enrichify/ --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+      
+      # Wait a bit for IIS to release locks
+      - name: Wait for app to stop
+        run: sleep 10
         
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -51,7 +60,11 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./publish/
           server-dir: /enrichify/
-          # Don't upload unnecessary files
           exclude: |
             **/.git*
             **/.git*/**
+      
+      # Remove app_offline.htm to bring site back online
+      - name: Remove app_offline.htm
+        run: |
+          curl -v ftp://win8155.site4now.net/enrichify/app_offline.htm --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" -Q "DELE /enrichify/app_offline.htm"
