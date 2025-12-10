@@ -1,150 +1,75 @@
-﻿/* ========================================
-   Hero Section - Full Width Background
-   ======================================== */
+﻿html {
+    font-size: 14px;
+}
 
-.hero-section {
-    width: 100vw;
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
     position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    padding: 80px 0;
+    min-height: 100%;
 }
 
-    .hero-section .container {
-        max-width: 1140px;
-        margin: 0 auto;
-        padding-left: 15px;
-        padding-right: 15px;
+body {
+    margin: 0; /* Changed from margin-bottom: 60px */
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Footer spacing */
+.footer {
+    margin-top: 60px;
+}
+
+/* DARK MODE */
+.dark-mode {
+    background-color: #121212 !important;
+    color: #e5e5e5 !important;
+}
+
+    .dark-mode .card {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
     }
 
-.min-vh-75 {
-    min-height: 75vh;
-}
-
-/* Hero Image Animation */
-.hero-image-wrapper {
-    animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px);
+    .dark-mode .table {
+        color: #ddd;
     }
 
-    50% {
-        transform: translateY(-20px);
-    }
-}
-
-/* ========================================
-   All Sections - Full Width Backgrounds
-   ======================================== */
-
-.comparison-section,
-.how-it-works-section,
-.upload-section,
-.features-section,
-.cta-section {
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
-    padding: 80px 0;
-}
-
-    .comparison-section .container,
-    .how-it-works-section .container,
-    .upload-section .container,
-    .features-section .container,
-    .cta-section .container {
-        max-width: 1140px;
-        margin: 0 auto;
-        padding-left: 15px;
-        padding-right: 15px;
+    .dark-mode .table-hover tbody tr:hover {
+        background-color: #2a2a2a;
     }
 
-/* Individual Section Backgrounds */
-.comparison-section {
-    background-color: #ffffff;
-}
-
-.how-it-works-section {
-    background-color: #f8f9fa;
-}
-
-.upload-section {
-    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
-}
-
-.features-section {
-    background-color: #ffffff;
-}
-
-.cta-section {
-    background: linear-gradient(135deg, #212529 0%, #343a40 100%);
-}
-
-/* ========================================
-   Upload Area
-   ======================================== */
-
-.upload-area {
-    border-color: #dee2e6;
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-
-    .upload-area:hover {
-        border-color: rgba(255, 255, 255, 0.5);
-        background-color: rgba(255, 255, 255, 0.1);
+    .dark-mode .alert-info {
+        background-color: #1e3a5f;
+        border-color: #295b8f;
+        color: #d9e9f8;
     }
 
-    .upload-area.drag-over {
-        border-color: rgba(255, 255, 255, 0.8);
-        background-color: rgba(255, 255, 255, 0.15);
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+        background-color: #222;
+        color: #fff;
+        border-color: #444;
     }
 
-/* ========================================
-   Responsive Adjustments
-   ======================================== */
-
-@media (min-width: 1200px) {
-    .hero-section .container,
-    .comparison-section .container,
-    .how-it-works-section .container,
-    .upload-section .container,
-    .features-section .container,
-    .cta-section .container {
-        max-width: 1140px;
-    }
-}
-
-@media (max-width: 768px) {
-    .hero-section .container,
-    .comparison-section .container,
-    .how-it-works-section .container,
-    .upload-section .container,
-    .features-section .container,
-    .cta-section .container {
-        padding-left: 20px;
-        padding-right: 20px;
+/* Ensure navbar items are properly aligned on mobile */
+@media (max-width: 991px) {
+    .navbar-nav {
+        gap: 0.5rem;
     }
 
-    .hero-section,
-    .comparison-section,
-    .how-it-works-section,
-    .upload-section,
-    .features-section,
-    .cta-section {
-        padding: 40px 0;
-    }
-
-    .min-vh-75 {
-        min-height: auto;
-    }
+        .navbar-nav .btn {
+            width: 100%;
+            margin-left: 0 !important;
+            margin-top: 0.5rem;
+        }
 }
