@@ -1,20 +1,20 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -24,39 +24,70 @@ body {
     margin-bottom: 60px;
 }
 
-/* DARK MODE */
+/* ============================================
+   NAVBAR STYLES - GLOBAL (applies to all pages)
+   ============================================ */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* Navbar buttons styling */
+.navbar-nav .btn {
+    font-size: 0.95rem;
+    padding: 0.5rem 1.25rem;
+}
+
+/* Mobile navbar adjustments */
+@media (max-width: 767px) {
+    .navbar-nav {
+        gap: 0.5rem;
+    }
+
+        .navbar-nav .btn {
+            width: 100%;
+            margin-left: 0 !important;
+            margin-top: 0.5rem;
+        }
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
 .dark-mode {
     background-color: #121212 !important;
     color: #e5e5e5 !important;
 }
 
-.dark-mode .card {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-}
+    .dark-mode .card {
+        background-color: #1e1e1e !important;
+        color: #fff !important;
+    }
 
-.dark-mode .table {
-    color: #ddd;
-}
+    .dark-mode .table {
+        color: #ddd;
+    }
 
-.dark-mode .table-hover tbody tr:hover {
-    background-color: #2a2a2a;
-}
+    .dark-mode .table-hover tbody tr:hover {
+        background-color: #2a2a2a;
+    }
 
-.dark-mode .alert-info {
-    background-color: #1e3a5f;
-    border-color: #295b8f;
-    color: #d9e9f8;
-}
+    .dark-mode .alert-info {
+        background-color: #1e3a5f;
+        border-color: #295b8f;
+        color: #d9e9f8;
+    }
 
-.dark-mode input,
-.dark-mode select,
-.dark-mode textarea {
-    background-color: #222;
-    color: #fff;
-    border-color: #444;
-}
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode textarea {
+        background-color: #222;
+        color: #fff;
+        border-color: #444;
+    }
 
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
 /* Headings */
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter', sans-serif;
