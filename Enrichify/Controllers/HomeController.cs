@@ -18,6 +18,11 @@ namespace Enrichify.Controllers
             _hunterService = hunterService;
         }
 
+        public IActionResult Privacy() 
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
