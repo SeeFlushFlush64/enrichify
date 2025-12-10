@@ -106,3 +106,25 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     font-feature-settings: 'tnum'; /* Tabular numbers */
 }
+
+/* Logo styling */
+.navbar-brand img {
+    transition: opacity 0.2s ease;
+}
+
+    .navbar-brand img:hover {
+        opacity: 0.8;
+    }
+
+/* Adjust sizes if needed */
+@media (min-width: 768px) {
+    .navbar-brand img {
+        height: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-brand img {
+        height: 32px;
+    }
+}
