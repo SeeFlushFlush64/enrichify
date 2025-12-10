@@ -1,0 +1,78 @@
+# User-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio cache/options
+.vs/
+*.vsidx
+*.vspscc
+*.vssscc
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+
+# Others
+*.cache
+*.log
+*.tmp
+
+# ===================================
+# 🔒 SECRETS & CONFIGURATION FILES
+# ===================================
+# Never commit files with API keys or sensitive data
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+appsettings.*.json
+
+# EXCEPT: Keep the example template
+!appsettings.example.json
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Connection strings
+connectionstrings.config
+secrets.json
+
+# ===================================
+# 🗂️ OPTIONAL: Other common ignores
+# ===================================
+# Node modules (if you use any frontend tools)
+node_modules/
+
+# Published output
+[Pp]ublish/
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Backup files
+*.bak
