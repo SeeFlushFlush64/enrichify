@@ -8,7 +8,7 @@ using System.Globalization;
 namespace Enrichify.Controllers
 {
     //last try, web deploy
-    [Authorize]
+
     public class HomeController : Controller
     {
         private readonly HunterService _hunterService;
