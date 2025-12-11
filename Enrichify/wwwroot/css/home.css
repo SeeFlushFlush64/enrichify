@@ -502,17 +502,46 @@ a, button {
     backdrop-filter: blur(3px);
 }
 
-    #loadingOverlay .spinner-border {
-        border-width: 0.3rem;
+#loadingOverlay .spinner-border {
+    border-width: 0.3rem;
+}
+
+#loadingOverlay .progress {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+#loadingOverlay .progress-bar {
+    background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   ERROR ALERT ANIMATION
+   ============================================ */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
     }
 
-    #loadingOverlay .progress {
-        background-color: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.alert-danger {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
     }
 
-    #loadingOverlay .progress-bar {
-        background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
-        font-weight: 600;
-        font-size: 0.9rem;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
