@@ -142,6 +142,49 @@ body {
 }
 
 /* ============================================
+   RESPONSIVE BUTTON SIZING
+   ============================================ */
+/* Upload section responsive buttons */
+.btn-responsive {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+    .btn-responsive {
+        font-size: 1rem;
+        padding: 0.65rem 1.5rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .btn-responsive {
+        font-size: 1.125rem;
+        padding: 0.75rem 2rem;
+    }
+}
+
+/* CTA section responsive button */
+.btn-cta-responsive {
+    font-size: 0.9rem;
+    padding: 0.6rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .btn-cta-responsive {
+        font-size: 1rem;
+        padding: 0.7rem 2rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .btn-cta-responsive {
+        font-size: 1.125rem;
+        padding: 0.875rem 2.5rem;
+    }
+}
+
+/* ============================================
    HERO SECTION - RESPONSIVE SIZING
    ============================================ */
 .hero-section {
@@ -502,20 +545,20 @@ a, button {
     backdrop-filter: blur(3px);
 }
 
-#loadingOverlay .spinner-border {
-    border-width: 0.3rem;
-}
+    #loadingOverlay .spinner-border {
+        border-width: 0.3rem;
+    }
 
-#loadingOverlay .progress {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-}
+    #loadingOverlay .progress {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
 
-#loadingOverlay .progress-bar {
-    background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
+    #loadingOverlay .progress-bar {
+        background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
 
 /* ============================================
    ERROR ALERT ANIMATION
@@ -543,5 +586,34 @@ a, button {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+/* Make all responsive buttons match hero button sizing on mobile */
+@media (max-width: 575px) {
+    .btn-responsive,
+    .btn-cta-responsive {
+        font-size: 0.9rem !important;
+        padding: 0.65rem 1rem !important;
+        width: 100%; /* optional: matches hero buttons' full width */
+    }
+}
+/* MOBILE FIX — shrink all icons inside the upload area */
+@media (max-width: 767px) {
+
+    /* Smaller upload cloud icon */
+    #upload .upload-area i {
+        font-size: 1.5rem !important;
+    }
+
+    /* Smaller info icons */
+    #upload .upload-area .bi-info-circle,
+    #upload .upload-area .bi-lightning-charge-fill {
+        font-size: 1rem !important;
+    }
+
+    /* Smaller button icons */
+    #upload .btn i {
+        font-size: 1rem !important;
+        margin-right: .25rem !important;
     }
 }
