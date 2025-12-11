@@ -63,4 +63,5 @@ namespace Enrichify.Controllers
             return View("Results", contacts);
         }
     }
+
 }

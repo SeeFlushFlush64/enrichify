@@ -469,3 +469,50 @@ h1, h2, h3 {
 a, button {
     transition: all 0.2s ease;
 }
+
+/* ============================================
+   UPLOAD SECTION - ADDITIONAL STYLES
+   ============================================ */
+.upload-area.border-success {
+    border-color: #198754 !important;
+    background-color: rgba(25, 135, 84, 0.05);
+}
+
+/* Error message shake animation */
+@keyframes shakeX {
+    0%, 100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+.animate__shakeX {
+    animation: shakeX 0.5s;
+}
+
+/* Loading overlay */
+#loadingOverlay {
+    backdrop-filter: blur(3px);
+}
+
+    #loadingOverlay .spinner-border {
+        border-width: 0.3rem;
+    }
+
+    #loadingOverlay .progress {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+    }
+
+    #loadingOverlay .progress-bar {
+        background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }

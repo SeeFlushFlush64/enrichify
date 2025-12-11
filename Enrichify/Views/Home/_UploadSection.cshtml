@@ -10,20 +10,21 @@
                                 <i class="bi bi-cloud-arrow-up display-3 text-primary mb-3 d-block"></i>
                                 <h5 class="mb-3">Drag & Drop your CSV file here</h5>
                                 <p class="text-muted mb-3">or</p>
-                                <label for="file" class="btn btn-outline-primary btn-lg mb-3">
+                                <button type="button" class="btn btn-outline-primary btn-lg mb-3" id="browseBtn">
                                     <i class="bi bi-folder2-open me-2"></i>Browse Files
-                                </label>
+                                </button>
                                 <input type="file"
                                        name="file"
                                        id="file"
                                        accept=".csv"
-                                       class="d-none"
+                                       style="display: none;"
                                        required />
                                 <div class="text-muted small">
                                     <i class="bi bi-info-circle me-1"></i>
                                     CSV should contain: Name, Company, Email columns
                                 </div>
                                 <div id="fileName" class="mt-3 text-primary fw-bold"></div>
+                                <div id="errorMessage" class="mt-3 text-danger fw-bold"></div>
                             </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
@@ -36,4 +37,187 @@
             </div>
         </div>
     </div>
+
+    <!-- Loading overlay - moved outside form to prevent conflicts -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 99999;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+            <div class="spinner-border text-light mb-3" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <h4 class="text-white mb-2">Processing your CSV file...</h4>
+            <p class="text-white-50">Please wait while we enrich your leads</p>
+            <div class="progress mx-auto mt-3" style="width: 300px; height: 25px; background-color: rgba(255,255,255,0.2);">
+                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar" style="width: 0%; background: linear-gradient(90deg, #0d6efd 0%, #0dcaf0 100%); font-weight: 600;">
+                    0%
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
+
+<script>
+    (function() {
+        'use strict';
+
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initUploadSection);
+        } else {
+            initUploadSection();
+        }
+
+        function initUploadSection() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('file');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileName = document.getElementById('fileName');
+            const errorMessage = document.getElementById('errorMessage');
+            const uploadForm = document.getElementById('uploadForm');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const progressBar = document.getElementById('progressBar');
+
+            let isProcessing = false; // Flag to prevent multiple submissions
+
+            // Browse button click handler - prevent event bubbling
+            browseBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
+                if (!isProcessing) {
+                    fileInput.click();
+                }
+            }, true);
+
+            // Prevent dropZone click from triggering file input
+            dropZone.addEventListener('click', function(e) {
+                // Only allow file input trigger from browse button
+                if (e.target !== browseBtn && !browseBtn.contains(e.target)) {
+                    e.stopPropagation();
+                }
+            });
+
+            // File input change handler
+            fileInput.addEventListener('change', function(e) {
+                errorMessage.textContent = '';
+                fileName.textContent = '';
+                dropZone.classList.remove('border-success');
+
+                if (this.files && this.files.length > 0) {
+                    const file = this.files[0];
+                    if (file.name.toLowerCase().endsWith('.csv')) {
+                        fileName.textContent = `Selected: ${file.name}`;
+                        dropZone.classList.add('border-success');
+                    } else {
+                        errorMessage.textContent = 'Please select a valid CSV file';
+                        this.value = '';
+                    }
+                }
+            });
+
+            // Drag and drop handlers
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, function() {
+                    if (!isProcessing) {
+                        this.classList.add('border-primary', 'bg-light');
+                    }
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, function() {
+                    this.classList.remove('border-primary', 'bg-light');
+                }, false);
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                if (isProcessing) return;
+
+                errorMessage.textContent = '';
+                fileName.textContent = '';
+                dropZone.classList.remove('border-success');
+
+                const files = e.dataTransfer.files;
+
+                if (files.length > 0) {
+                    const file = files[0];
+                    if (file.name.toLowerCase().endsWith('.csv')) {
+                        fileInput.files = files;
+                        fileName.textContent = `Selected: ${file.name}`;
+                        dropZone.classList.add('border-success');
+                    } else {
+                        errorMessage.textContent = 'Please drop a valid CSV file';
+                    }
+                }
+            }, false);
+
+            // Form submission handler
+            uploadForm.addEventListener('submit', function(e) {
+                errorMessage.textContent = '';
+
+                // Prevent multiple submissions
+                if (isProcessing) {
+                    e.preventDefault();
+                    return false;
+                }
+
+                // Check if file is selected
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    errorMessage.textContent = 'Please select a CSV file before enriching leads!';
+                    errorMessage.classList.add('animate__shakeX');
+                    setTimeout(function() {
+                        errorMessage.classList.remove('animate__shakeX');
+                    }, 1000);
+                    return false;
+                }
+
+                // Validate file type one more time
+                const file = fileInput.files[0];
+                if (!file.name.toLowerCase().endsWith('.csv')) {
+                    e.preventDefault();
+                    errorMessage.textContent = 'Please select a valid CSV file!';
+                    return false;
+                }
+
+                // Set processing flag
+                isProcessing = true;
+
+                // Disable form elements
+                browseBtn.disabled = true;
+                const submitBtn = uploadForm.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Processing...';
+
+                // Show loading overlay
+                loadingOverlay.style.display = 'block';
+
+                // Simulate progress
+                let progress = 0;
+                const progressInterval = setInterval(function() {
+                    progress += Math.random() * 10;
+                    if (progress > 90) progress = 90;
+                    progressBar.style.width = progress + '%';
+                    progressBar.textContent = Math.round(progress) + '%';
+                }, 400);
+
+                // Store interval to clear later if needed
+                window.uploadProgressInterval = progressInterval;
+
+                // Don't prevent default - let the form submit naturally
+                // The form will POST to the controller action
+                return true;
+            });
+        }
+    })();
+</script>
