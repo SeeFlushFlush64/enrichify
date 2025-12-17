@@ -395,6 +395,36 @@ body {
 }
 
 /* ============================================
+   SECTION BACKGROUND IMAGES - STRATEGIC PLACEMENT
+   ============================================ */
+
+/* Upload Section - Data/Analytics theme with proper overlay */
+#upload {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(248, 249, 250, 0.92) 100%), url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+/* CTA Section - Happy/Confident Business People theme */
+.bg-dark.py-5 {
+    background: linear-gradient(135deg, rgba(33, 37, 41, 0.80) 0%, rgba(0, 0, 0, 0.80) 100%), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    position: relative;
+}
+
+/* Enhanced card visibility in upload section */
+#upload .card {
+    background: rgba(255, 255, 255, 0.98) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ============================================
    SECTION PADDING & SPACING
    ============================================ */
 @media (max-width: 767px) {
@@ -719,5 +749,11 @@ a, button {
     #upload .btn i {
         font-size: 1rem !important;
         margin-right: .25rem !important;
+    }
+
+    /* Disable parallax on mobile for better performance */
+    #upload,
+    .bg-dark.py-5 {
+        background-attachment: scroll !important;
     }
 }
