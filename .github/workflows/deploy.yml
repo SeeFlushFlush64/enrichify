@@ -30,6 +30,9 @@ jobs:
               }
             },
             "AllowedHosts": "*",
+            "ConnectionStrings": {
+              "DefaultConnection": "${{ secrets.CONNECTION_STRING_PRODUCTION }}"
+            },
             "Hunter": {
               "ApiKey": "${{ secrets.HUNTER_API_KEY }}"
             }
