@@ -4,6 +4,7 @@ using Enrichify.Services; // your HunterService
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.Text.Json;
 
 namespace Enrichify.Controllers
 {
@@ -59,40 +60,24 @@ namespace Enrichify.Controllers
                     }
                 }
 
-                // Check if CSV is empty
                 if (contacts == null || contacts.Count == 0)
                 {
                     TempData["ErrorMessage"] = "The CSV file is empty or contains no valid contacts.";
                     return RedirectToAction("Index");
                 }
 
-                // Limit to 5 contacts per upload
                 if (contacts.Count > 5)
                 {
                     TempData["ErrorMessage"] = $"Please limit your CSV to 5 contacts or fewer. Your file contains {contacts.Count} contacts.";
                     return RedirectToAction("Index");
                 }
 
-                // Enrich each contact asynchronously
-                foreach (var contact in contacts)
-                {
-                    // Skip if contact data is incomplete
-                    if (string.IsNullOrWhiteSpace(contact.Name) || string.IsNullOrWhiteSpace(contact.Company))
-                    {
-                        contact.EnrichedEmail = "Invalid data";
-                        continue;
-                    }
+                // NEW: Store contacts in TempData for preview
+                TempData["ContactsJson"] = JsonSerializer.Serialize(contacts);
+                TempData["FileName"] = file.FileName;
 
-                    // Split first and last name
-                    var names = contact.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                    string firstName = names[0];
-                    string lastName = names.Length > 1 ? names[^1] : ""; // Use last element as last name
-
-                    contact.EnrichedEmail = await _hunterService.FindEmail(contact.Company, firstName, lastName);
-                }
-
-                // Pass the enriched list directly to the Results view
-                return View("Results", contacts);
+                // NEW: Redirect to preview instead of immediate enrichment
+                return RedirectToAction("Preview");
             }
             catch (CsvHelperException ex)
             {
@@ -104,6 +89,62 @@ namespace Enrichify.Controllers
                 TempData["ErrorMessage"] = $"Error processing file: {ex.Message}";
                 return RedirectToAction("Index");
             }
+        }
+
+        // NEW ACTION: Show preview
+        [HttpGet]
+        public IActionResult Preview()
+        {
+            var contactsJson = TempData["ContactsJson"] as string;
+            var fileName = TempData["FileName"] as string;
+
+            if (string.IsNullOrEmpty(contactsJson))
+            {
+                TempData["ErrorMessage"] = "No data to preview. Please upload a CSV file first.";
+                return RedirectToAction("Index");
+            }
+
+            var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
+
+            // Keep data for next request
+            TempData.Keep("ContactsJson");
+            TempData.Keep("FileName");
+
+            ViewBag.FileName = fileName;
+            return View(contacts);
+        }
+
+        // NEW ACTION: Enrich from preview
+        [HttpPost]
+        public async Task<IActionResult> EnrichFromPreview()
+        {
+            var contactsJson = TempData["ContactsJson"] as string;
+
+            if (string.IsNullOrEmpty(contactsJson))
+            {
+                TempData["ErrorMessage"] = "Session expired. Please upload your CSV again.";
+                return RedirectToAction("Index");
+            }
+
+            var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
+
+            // Your existing enrichment logic
+            foreach (var contact in contacts)
+            {
+                if (string.IsNullOrWhiteSpace(contact.Name) || string.IsNullOrWhiteSpace(contact.Company))
+                {
+                    contact.EnrichedEmail = "Invalid data";
+                    continue;
+                }
+
+                var names = contact.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                string firstName = names[0];
+                string lastName = names.Length > 1 ? names[^1] : "";
+
+                contact.EnrichedEmail = await _hunterService.FindEmail(contact.Company, firstName, lastName);
+            }
+
+            return View("Results", contacts);
         }
     }
 
