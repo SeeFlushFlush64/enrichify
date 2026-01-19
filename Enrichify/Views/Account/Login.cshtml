@@ -10,7 +10,13 @@
                 <div class="card-body p-5">
                     <h2 class="text-center mb-4 fw-bold">Welcome Back</h2>
                     <p class="text-center text-muted mb-4">Sign in to your account</p>
-
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
                     <form asp-action="Login" method="post">
                         <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
