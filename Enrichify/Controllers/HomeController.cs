@@ -1,15 +1,12 @@
 using CsvHelper;
 using Enrichify.Models;
-using Enrichify.Services; // your HunterService
-using Microsoft.AspNetCore.Authorization;
+using Enrichify.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text.Json;
 
 namespace Enrichify.Controllers
 {
-    //last try, web deploy
-
     public class HomeController : Controller
     {
         private readonly HunterService _hunterService;
@@ -19,7 +16,7 @@ namespace Enrichify.Controllers
             _hunterService = hunterService;
         }
 
-        public IActionResult Privacy() 
+        public IActionResult Privacy()
         {
             return View();
         }
@@ -72,11 +69,10 @@ namespace Enrichify.Controllers
                     return RedirectToAction("Index");
                 }
 
-                // NEW: Store contacts in TempData for preview
+                // Store in TempData as JSON string
                 TempData["ContactsJson"] = JsonSerializer.Serialize(contacts);
                 TempData["FileName"] = file.FileName;
 
-                // NEW: Redirect to preview instead of immediate enrichment
                 return RedirectToAction("Preview");
             }
             catch (CsvHelperException ex)
@@ -91,7 +87,6 @@ namespace Enrichify.Controllers
             }
         }
 
-        // NEW ACTION: Show preview
         [HttpGet]
         public IActionResult Preview()
         {
@@ -104,17 +99,24 @@ namespace Enrichify.Controllers
                 return RedirectToAction("Index");
             }
 
-            var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
+            try
+            {
+                var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
 
-            // Keep data for next request
-            TempData.Keep("ContactsJson");
-            TempData.Keep("FileName");
+                // Keep data for the form post
+                TempData.Keep("ContactsJson");
+                TempData.Keep("FileName");
 
-            ViewBag.FileName = fileName;
-            return View(contacts);
+                ViewBag.FileName = fileName ?? "Unknown File";
+                return View(contacts);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error loading preview: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
 
-        // NEW ACTION: Enrich from preview
         [HttpPost]
         public async Task<IActionResult> EnrichFromPreview()
         {
@@ -126,26 +128,33 @@ namespace Enrichify.Controllers
                 return RedirectToAction("Index");
             }
 
-            var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
-
-            // Your existing enrichment logic
-            foreach (var contact in contacts)
+            try
             {
-                if (string.IsNullOrWhiteSpace(contact.Name) || string.IsNullOrWhiteSpace(contact.Company))
+                var contacts = JsonSerializer.Deserialize<List<Contact>>(contactsJson);
+
+                // Enrich each contact
+                foreach (var contact in contacts)
                 {
-                    contact.EnrichedEmail = "Invalid data";
-                    continue;
+                    if (string.IsNullOrWhiteSpace(contact.Name) || string.IsNullOrWhiteSpace(contact.Company))
+                    {
+                        contact.EnrichedEmail = "Invalid data";
+                        continue;
+                    }
+
+                    var names = contact.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    string firstName = names[0];
+                    string lastName = names.Length > 1 ? names[^1] : "";
+
+                    contact.EnrichedEmail = await _hunterService.FindEmail(contact.Company, firstName, lastName);
                 }
 
-                var names = contact.Name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                string firstName = names[0];
-                string lastName = names.Length > 1 ? names[^1] : "";
-
-                contact.EnrichedEmail = await _hunterService.FindEmail(contact.Company, firstName, lastName);
+                return View("Results", contacts);
             }
-
-            return View("Results", contacts);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Error during enrichment: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
     }
-
 }
