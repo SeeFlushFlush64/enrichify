@@ -38,7 +38,7 @@ namespace Enrichify.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
                     return RedirectToAction("Index", "Home");
                 }
 
