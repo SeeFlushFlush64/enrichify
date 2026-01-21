@@ -9,9 +9,9 @@ namespace Enrichify.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly HunterService _hunterService;
+        private readonly IHunterService _hunterService;
 
-        public HomeController(HunterService hunterService)
+        public HomeController(IHunterService hunterService)
         {
             _hunterService = hunterService;
         }

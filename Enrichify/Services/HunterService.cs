@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Enrichify.Services
 {
-    public class HunterService
+    public class HunterService : IHunterService
     {
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;

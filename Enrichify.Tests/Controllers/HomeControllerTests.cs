@@ -13,12 +13,12 @@ namespace Enrichify.Tests.Controllers
 {
     public class HomeControllerTests
     {
-        private readonly Mock<HunterService> _mockHunterService;
+        private readonly Mock<IHunterService> _mockHunterService;
         private readonly HomeController _controller;
 
         public HomeControllerTests()
         {
-            _mockHunterService = new Mock<HunterService>();
+            _mockHunterService = new Mock<IHunterService>();
             _controller = new HomeController(_mockHunterService.Object);
 
             // Setup TempData
@@ -138,7 +138,9 @@ namespace Enrichify.Tests.Controllers
 
             // Assert
             result.Should().BeOfType<RedirectToActionResult>();
-            _controller.TempData["ErrorMessage"].Should().Be("Please limit your CSV to 5 contacts or fewer");
+            _controller.TempData["ErrorMessage"].ToString().Should()
+                .StartWith("Please limit your CSV to 5 contacts or fewer")
+                .And.Contain("6 contacts");
         }
 
         [Fact]

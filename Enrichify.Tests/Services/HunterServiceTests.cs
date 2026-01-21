@@ -13,7 +13,7 @@ namespace Enrichify.Tests.Services
         private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
         private readonly HttpClient _httpClient;
         private readonly Mock<IConfiguration> _mockConfiguration;
-        private readonly HunterService _service;
+        private readonly IHunterService _service;
 
         public HunterServiceTests()
         {

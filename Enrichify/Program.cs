@@ -26,7 +26,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-builder.Services.AddHttpClient<HunterService>();
+builder.Services.AddHttpClient<IHunterService, HunterService>();
 
 var app = builder.Build();
 
