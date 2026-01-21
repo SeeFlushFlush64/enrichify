@@ -32,5 +32,5 @@ jobs:
         if: always()
         with:
           name: Test Results
-          path: '**/test-results.trx'
+          path: './TestResults/*.trx'  # Changed from **/test-results.trx
           reporter: dotnet-trx
