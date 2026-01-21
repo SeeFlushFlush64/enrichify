@@ -29,14 +29,23 @@ Enrichify is a web-based email enrichment application powered by **Hunter.io API
 ### How It Works
 
 1. **Create or Sign into your Account** - Sign up with your email and create a secure password
-<img width="1519" height="784" alt="image" src="https://github.com/user-attachments/assets/2d50fdd2-4931-45ef-aa63-8e384dd94eca" />
-<img width="1512" height="786" alt="image" src="https://github.com/user-attachments/assets/083297df-8eb5-43b7-96f1-cb061b746d1e" />
+
+<img width="1519" alt="Registration Page" src="https://github.com/user-attachments/assets/2d50fdd2-4931-45ef-aa63-8e384dd94eca" />
+
+<img width="1512" alt="Login Page" src="https://github.com/user-attachments/assets/083297df-8eb5-43b7-96f1-cb061b746d1e" />
+
 2. **Upload Your CSV** - Drag and drop a file with Name, Company, and Email columns
-<img width="1512" height="786" alt="image" src="https://github.com/user-attachments/assets/1dd0ff4b-7559-4565-96aa-2d74c1c0896f" />
+
+<img width="1512" alt="CSV Upload Interface" src="https://github.com/user-attachments/assets/1dd0ff4b-7559-4565-96aa-2d74c1c0896f" />
+
 3. **Preview your Uploaded CSV** - We require Name, Company and Email columns to do the email enrichment
-<img width="1499" height="812" alt="image" src="https://github.com/user-attachments/assets/7b5bdbc2-2ea4-4b30-9a61-430c7bd75f6b" />
+
+<img width="1499" alt="CSV Preview Screen" src="https://github.com/user-attachments/assets/7b5bdbc2-2ea4-4b30-9a61-430c7bd75f6b" />
+
 4. **We Find & Verify** - Our system searches Hunter.io's database to find verified emails
-<img width="1503" height="812" alt="image" src="https://github.com/user-attachments/assets/e001ed8c-8a8f-4df9-a3a1-7206f1bc0258" />
+
+<img width="1503" alt="Enrichment Results" src="https://github.com/user-attachments/assets/e001ed8c-8a8f-4df9-a3a1-7206f1bc0258" />
+
 5. **Download Results** - Get your enriched CSV instantly with verified email addresses
 
 ## 🛠️ Tech Stack
