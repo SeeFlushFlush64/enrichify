@@ -2,9 +2,8 @@
 
 > A free, production-ready email enrichment platform that finds and verifies professional email addresses without breaking the bank.
 
-[![Live Demo]<img width="1515" height="784" alt="image" src="https://github.com/user-attachments/assets/e1f6ee04-7c9c-439f-96c2-0ead0aa4cf0a" />
-](https://enrichify-eph8f2bwh2fwb3a0.southeastasia-01.azurewebsites.net/)
-[![Build Status](https://github.com/YOUR_USERNAME/enrichify/workflows/CI%20-%20Build%20and%20Test/badge.svg)](https://github.com/SeeFlushFlush64/enrichify/actions)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://enrichify-eph8f2bwh2fwb3a0.southeastasia-01.azurewebsites.net/)
+[![Build Status](https://github.com/YOUR_USERNAME/enrichify/workflows/CI%20-%20Build%20and%20Test/badge.svg)](https://github.com/YOUR_USERNAME/enrichify/actions)
 [![Azure](https://img.shields.io/badge/Azure-Deployed-0078D4)](https://enrichify-eph8f2bwh2fwb3a0.southeastasia-01.azurewebsites.net/)
 
 ## 🎯 What is Enrichify?
