@@ -76,3 +76,6 @@ node_modules/
 
 # Backup files
 *.bak
+
+# Visual Studio publish profiles
+**/Properties/PublishProfiles/

@@ -1,0 +1,155 @@
+﻿@model List<Enrichify.Models.Contact>
+
+@{
+    ViewData["Title"] = "Preview & Validate";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card border-0 shadow-lg">
+                    <div class="card-header bg-primary text-white py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="mb-0">
+                                    <i class="bi bi-table me-2"></i>Preview Your Data
+                                </h4>
+                                <small>File: @ViewBag.FileName</small>
+                            </div>
+                            <span class="badge bg-light text-dark fs-6">@Model.Count contacts</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <!-- Validation Summary -->
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            <strong>Review your data before enrichment</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Sort and filter contacts using the table headers</li>
+                                <li>Check for missing or invalid data</li>
+                                <li>Valid contacts will show <span class="badge bg-success">✓ Valid</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Data Table -->
+                        <div class="table-responsive">
+                            <table id="previewTable" class="table table-hover table-striped">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>
+                                            Name
+                                            <i class="bi bi-arrow-down-up ms-1 sort-icon"></i>
+                                        </th>
+                                        <th>
+                                            Company
+                                            <i class="bi bi-arrow-down-up ms-1 sort-icon"></i>
+                                        </th>
+                                        <th>
+                                            Email (Original)
+                                            <i class="bi bi-arrow-down-up ms-1 sort-icon"></i>
+                                        </th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (int i = 0; i < Model.Count; i++)
+                                    {
+                                        var contact = Model[i];
+                                        var isValid = !string.IsNullOrWhiteSpace(contact.Name) &&
+                                        !string.IsNullOrWhiteSpace(contact.Company);
+
+                                        <tr class="@(isValid ? "" : "table-warning")">
+                                            <td>@(i + 1)</td>
+                                            <td>
+                                                @if (string.IsNullOrWhiteSpace(contact.Name))
+                                                {
+                                                    <span class="text-danger"><em>Missing Name</em></span>
+                                                }
+                                                else
+                                                {
+                                                    @contact.Name
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (string.IsNullOrWhiteSpace(contact.Company))
+                                                {
+                                                    <span class="text-danger"><em>Missing Company</em></span>
+                                                }
+                                                else
+                                                {
+                                                    @contact.Company
+                                                }
+                                            </td>
+                                            <td>@(string.IsNullOrWhiteSpace(contact.Email) ? "-" : contact.Email)</td>
+                                            <td>
+                                                @if (isValid)
+                                                {
+                                                    <span class="badge bg-success">✓ Valid</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning text-dark">⚠ Invalid</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Cancel & Upload New
+                            </a>
+
+                            <form asp-action="EnrichFromPreview" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-magic me-2"></i>Start Enrichment
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Add DataTables for sorting/filtering -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#previewTable').DataTable({
+            pageLength: 25,
+            order: [[0, 'asc']],
+            language: {
+                search: "Search contacts:",
+                lengthMenu: "Show _MENU_ contacts per page"
+            }
+        });
+    });
+</script>
+
+<style>
+    .sort-icon {
+        font-size: 0.8em;
+        opacity: 0.6;
+    }
+
+    thead th {
+        cursor: pointer;
+        user-select: none;
+    }
+
+        thead th:hover .sort-icon {
+            opacity: 1;
+        }
+</style>
