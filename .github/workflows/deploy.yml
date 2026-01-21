@@ -1,4 +1,4 @@
-name: Build project and deploy to SmarterASP.NET
+name: Build and Deploy to Azure Web App
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
       
@@ -45,39 +45,25 @@ jobs:
       - name: Publish
         run: dotnet publish ./Enrichify/Enrichify.csproj --configuration Release --output ./publish
       
-      # Upload app_offline.htm first to stop the app
-      - name: Upload app_offline.htm
-        continue-on-error: true
+      - name: Create deployment package
         run: |
-          echo "<h1>Updating site...</h1>" > app_offline.htm
-          curl -T app_offline.htm ftp://win9080.site4now.net/portfolio/ --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}"
+          cd ./publish
+          zip -r ../deploy.zip .
+          cd ..
       
-      # Wait a bit for IIS to release locks
-      - name: Wait for app to stop
-        run: sleep 10
-        
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          server: win9080.site4now.net
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./publish/
-          server-dir: /portfolio/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/app_offline.htm
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      # Remove app_offline.htm to bring site back online
-      - name: Remove app_offline.htm
-        continue-on-error: true
+      - name: Deploy to Azure Web App
         run: |
-          curl ftp://win9080.site4now.net/portfolio/app_offline.htm --user "${{ secrets.FTP_USERNAME }}:${{ secrets.FTP_PASSWORD }}" -Q "DELE /portfolio/app_offline.htm" || echo "app_offline.htm removal completed or file not found"
+          az webapp deploy \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --name ${{ secrets.AZURE_WEBAPP_NAME }} \
+            --src-path ./deploy.zip \
+            --type zip
       
-      # Verify site is back online
-      - name: Wait for site to restart
-        run: sleep 15
-        
-      - name: Deployment completed
-        run: echo "✅ Deployment to SmarterASP.NET completed successfully!"
+      - name: Azure Logout
+        run: az logout
+        if: always()
