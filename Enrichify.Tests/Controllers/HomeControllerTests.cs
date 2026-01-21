@@ -138,7 +138,7 @@ namespace Enrichify.Tests.Controllers
 
             // Assert
             result.Should().BeOfType<RedirectToActionResult>();
-            _controller.TempData["ErrorMessage"].Should().Contain("Please limit your CSV to 5 contacts or fewer");
+            _controller.TempData["ErrorMessage"].Should().Be("Please limit your CSV to 5 contacts or fewer");
         }
 
         [Fact]

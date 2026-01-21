@@ -17,7 +17,7 @@
 
 		<!-- Add these two -->
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.22" />
 	</ItemGroup>
 
 	<ItemGroup>
