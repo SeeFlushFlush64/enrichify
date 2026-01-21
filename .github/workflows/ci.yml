@@ -26,11 +26,3 @@ jobs:
         
       - name: Run Tests
         run: dotnet test --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
-      
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Test Results
-          path: './TestResults/*.trx'  # Changed from **/test-results.trx
-          reporter: dotnet-trx
